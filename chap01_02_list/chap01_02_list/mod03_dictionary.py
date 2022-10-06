@@ -42,3 +42,10 @@ if __name__ == '__main__':
     for (key, value) in list(dic.items()):
         print(f'{key} --> {value}')
     print()
+
+    # 최댓값 출력
+    dic = {'홍길동':90, '김보람':80, '김정수':70}
+    all_value = dic.values()
+    max_value = max(all_value)
+    print(max_value)
+
