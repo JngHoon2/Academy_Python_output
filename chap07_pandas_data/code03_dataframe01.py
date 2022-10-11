@@ -47,3 +47,41 @@ print(df1['백단위' : '백단위']) # 한 행 조회
 # 행의 이름으로 슬라이싱(범위로 조회) 만단위 포함
 print('5. df1[\'일단위\':\'만단위\'] : 일단위 ~ 만단위 까지')
 print(df1['일단위' : '만단위'])
+
+# 행의 범위 슬라이싱(만단위 빠짐 주의!, 미포함)
+print('6. df1[0:4] : 0부터 4직전까지')
+print(df1[0:4])
+print()
+
+print('7. len(df1)', len(df1), df1.shape) # dataframe 행수(len(df1))와 전체적인 모습
+# 3. 열(컬럼)의 전체 값 조회
+print()
+print('8. df[0] #0번째 컬럼의 모든 값')
+print(df1[0])
+print()
+print('9.df1[1] #1번째 컬럼의 모든 값')
+print(df1[1])
+print()
+
+# 4. iteritems()을 통한 행 반복
+print('10.1 df1.iteritems() : ', type(df1.iteritems())) #<class 'generator'>
+print()
+
+# print('11. df1.iteritems()')
+for col_name, col in df1.iteritems(): #col_name : 컬럼 명, col : 컬럼값 전체 Series
+    print(f"{col_name}번째 - 컬럼값 {col[0]} {col[1]} {col[2]} {col[3]}")
+    # print(f"{col_name}번째 - 컬럼값 {col.values}.")
+print()
+
+print("12. 일자별 판매 데이터")
+
+# 5. 일자별 온라인 + 오프라인 판매금액 관련 dataframe 예제
+dates = ['10/01','10/02','10/03','10/04','10/05','10/06']
+online_sales = [300, 280, 350, 650, 500, 450]
+offline_sales = [150, 130, 210, 130, 100, 200]
+
+df = pd.DataFrame({"date" : dates,
+                   "on_sales" : online_sales,
+                   "off_sales" : offline_sales})
+print(df)
+print()
