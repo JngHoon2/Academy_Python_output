@@ -81,3 +81,120 @@ weather_df.fillna(0, inplace=True)
 print('13. 결손값을 fillna() 함수로 채움')
 print(weather_df.loc[559])
 print()
+
+## 데이터 조작(수정/대체)
+# replace() : 특정 값을 대체
+# 1. df = df.replace(기존값, 변경값)
+# 2. df = df.replace({'열 이름' : 기존값}, 변경 값)## 데이터 조작(수정/대체)
+# replace() : 특정 값을 대체
+# 1. 사용방법 : df = df.replace(기존값, 변경값)
+# 2. 사용방법 : df = df.replace({'열 이름' : 기존값}, 변경 값)
+a={'A' :[1,2,3,4,5,6],
+   'B' : [10,20,30,40,50,60],
+   'C' : [100,200,300,400,500,600]}
+df = pd.DataFrame(a)
+df = df.replace(500,555)
+df = df.replace({'B:50'},55)
+print('14. replace() 함수 값 변경',df)
+
+## 데이터 구조 변경
+# pivot() : 여러 분류로 섞인(중복) 행 데이터를 열 데이터로 회전시키는 기능
+'''
+pivot(index='', columns='', values='')
+    index : 데이터프레임의 index로 사용될 컬럼
+    columns : 데이터프레임의 컬럼명으로 사용될 컬럼
+    values : 데이터프레임의 데이터로 사용될 컬럼
+'''
+
+# 아래 데이터프레임을 보면 동일한 상품이 서로 다른 행에 중복하여 두고 있어 자료를 찾기 쉽지 않다.
+# 인덱스를 item으로 하고 type을 열의 레이블로 하여 데이터 프레임을 변경
+df_1 = pd.DataFrame({'item' : ['ring0', 'ring0', 'ring1', 'ring1'],
+                     'type' : ['gold', 'silver', 'gold', 'bronze'],
+                     'price' : [20000, 10000, 50000, 30000]})
+
+df_2 = df_1.pivot(index='item', columns='type', values='price')
+
+print('15. pivot() 적용 안된 df_1 : ')
+print(df_1)
+print()
+
+print('15. pivot() 적용된 df_2 : ')
+print(df_2)
+print()
+
+# pivot() 함수 2
+df_3 = pd.DataFrame([
+    ['20180901', 'A', 10],
+    ['20180901', 'B', 100],
+    ['20180901', 'C', 1000],
+    ['20180902', 'A', 20],
+    ['20180902', 'B', 200],
+    ['20180902', 'C', 2000],
+    ['20180903', 'A', 30],
+    ['20180903', 'B', 300],
+    ['20180903', 'C', 3000]], columns= ['date', 'type', 'volume'])
+print('16. pivot() 적용전 raw df_3 : ')
+print(df_3, '\n')
+
+pivot_df = df_3.pivot(index='date', columns='type', values='volume')
+pivot_df.columns = pivot_df.columns.values
+pivot_df.reset_index(level=0, inplace=True)
+print('16.1 pivot() 적용된 pivot_df : ')
+print(pivot_df)
+
+## 데이터 프레임 합치기(연결)
+# concat([데이터프레임, 데이터프레임])
+df_1 = pd.DataFrame({
+    'A' : ['a10', 'a11', 'a12'],
+    'B' : ['b10', 'b11', 'b12'],
+    'C' : ['c10', 'c11', 'c12']}, index=['가', '나', '다']
+)
+
+df_2 = pd.DataFrame({
+    'B' : ['b23', 'b24', 'b25'],
+    'C' : ['c23', 'c24', 'c25'],
+    'D' : ['d23', 'd24', 'd25']}, index=['다', '라', '마']
+)
+
+concat_df1 = pd.concat([df_1, df_2])
+print('17. pd.concat([df_1, df_2]) 작용된 concat_df1 : \n', concat_df1, '\n')
+
+# 결측치 제거(행 전체 제거, 열만 제거)
+'''
+    # 행의 데이터 중에 하나라도 결측치가 발견되면
+    # 해당 행을 삭제하고 기존 데이터 프레임 수정
+    
+    dropna(axis=0, how='any', inplace=False)
+        axis : 0일 경우, 결측치를 포함한 행을 삭제
+             : 1일 경우, 결측치를 포함한 열을 삭제
+             
+        how  : any 일 경우, 결측치가 하나라도 포함되고 있으면 제거 대상
+             : all 일 경우, 행 또는 열의 모든 데이터가 결측치일 때만 제거 대상
+        
+        inplace : True 일 경우, 원본 데이터에서 결측치를 제거
+                : False일 경우, 원본 데이터는 그대로 유지하고, 수정된 데이터만 데이터프레임으로 반환
+'''
+
+filePath = "/Users/tuan/Documents/pythonWorks/weather.csv"
+weather_df = pd.read_csv(filePath, encoding="CP949")
+missing_data = weather_df[weather_df['평균풍속'].isna()]
+print('30. 평균 풍속이 NaN인 데이터만 선별, Missing_data \n', missing_data, '\n')
+weather_df.dropna(axis=0, how='any', inplace=True)
+print('31. weather_df : loc[559]')
+print(weather_df)
+
+## [sort 추가] 정렬
+# sort_values(column_list, ascending="False", inplace=False)
+#   column_list : 컬럼명 리스트(예 : [컬럼명, 컬럼명])
+#   ascending : 정렬 방식 (True/False)
+#   inplace : 기존 데이터 프레임에 수정 적용 여부 (True/False)
+
+filePath = "/Users/tuan/Documents/pythonWorks/countries.csv"
+countries_df = pd.read_csv(filePath, index_col=0)
+
+print("32. 인구와 지역으로 역정렬, 원본 df에 미반영 \n")
+sort_df_two_column = countries_df.sort_values(by=['population', 'area'],
+                                              ascending= False,
+                                              inplace= False)
+print(sort_df_two_column, '\n')
+print(countries_df)
